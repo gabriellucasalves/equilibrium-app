@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, type ViewStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, type ViewStyle } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { useTheme } from '@/lib/theme';
@@ -25,6 +25,13 @@ export function Button({
 }: ButtonProps) {
   const theme = useTheme();
   const [focused, setFocused] = useState(false);
+  const webFocusProps =
+    Platform.OS === 'web'
+      ? ({
+          onFocus: () => setFocused(true),
+          onBlur: () => setFocused(false),
+        } as Record<string, unknown>)
+      : {};
 
   const backgrounds = {
     primary: theme.colors.accent,
@@ -44,9 +51,8 @@ export function Button({
       accessibilityRole="button"
       disabled={disabled}
       onPress={onPress}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
       accessibilityState={{ disabled }}
+      {...webFocusProps}
       style={({ pressed }) => [
         styles.base,
         {
