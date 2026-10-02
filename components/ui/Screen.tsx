@@ -8,6 +8,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import {
+  CLOSED_TEST_BACKGROUND,
+  CLOSED_TEST_MODE,
+} from '@/features/closed-test/config';
 import { useTheme } from '@/lib/theme';
 
 export type ScreenProps = ViewProps & {
@@ -23,18 +27,22 @@ export function Screen({
   ...rest
 }: ScreenProps) {
   const theme = useTheme();
+  const backgroundColor = CLOSED_TEST_MODE
+    ? CLOSED_TEST_BACKGROUND[theme.scheme]
+    : theme.colors.background;
   const contentStyle = [
     styles.content,
     padded && {
       paddingHorizontal: theme.spacing.lg,
       paddingVertical: theme.spacing.md,
     },
+    CLOSED_TEST_MODE && styles.closedColumn,
     style,
   ];
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: theme.colors.background }]}
+      style={[styles.safe, { backgroundColor }]}
       edges={['top', 'left', 'right', 'bottom']}
     >
       <KeyboardAvoidingView
@@ -65,4 +73,9 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { flexGrow: 1 },
   grow: { flexGrow: 1 },
+  closedColumn: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
+  },
 });

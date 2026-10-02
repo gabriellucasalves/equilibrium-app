@@ -9,6 +9,7 @@ import {
   buildDemoTransactions,
   transactionsFromOnboarding,
 } from '@/constants/demo';
+import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
 import { createSupabaseRepositories } from '@/repositories/factory';
 import type { TransactionInput } from '@/repositories/interfaces/transaction-repository';
 import { AppError, mapErrorToUserMessage } from '@/services/errors/map-error';
@@ -121,7 +122,7 @@ export const useFinanceStore = create<FinanceState>()(
         }),
 
       hydrateFromRemote: async ({ demo = false } = {}) => {
-        if (demo || get().isDemoMode) return;
+        if (CLOSED_TEST_MODE || demo || get().isDemoMode) return;
         const repos = createSupabaseRepositories();
         if (!repos) return;
 
@@ -275,7 +276,7 @@ export const useFinanceStore = create<FinanceState>()(
           lastSyncError: null,
         }));
 
-        if (get().isDemoMode) return tempId;
+        if (CLOSED_TEST_MODE || get().isDemoMode) return tempId;
         const repos = createSupabaseRepositories();
         if (!repos) return tempId;
 
