@@ -1,4 +1,6 @@
 import { Screen, Spacer, Text } from '@/components/ui';
+import { ClosedTestHome } from '@/features/closed-test/ClosedTestHome';
+import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
 import { HomeBody } from '@/features/dashboard/HomeSections';
 import { buildGreeting } from '@/features/dashboard/greeting';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
@@ -10,6 +12,14 @@ export default function HomeScreen() {
   const lastSyncError = useFinanceStore((s) => s.lastSyncError);
   const syncing = useFinanceStore((s) => s.syncing);
   const isDemoMode = useFinanceStore((s) => s.isDemoMode);
+
+  if (CLOSED_TEST_MODE) {
+    return (
+      <Screen>
+        <ClosedTestHome />
+      </Screen>
+    );
+  }
 
   return (
     <Screen>

@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
 import { AppThemeProvider, useTheme } from '@/lib/theme';
 import { useAuthStore } from '@/store/auth-store';
 import { useFinanceStore } from '@/store/finance-store';
@@ -59,12 +60,16 @@ export default function RootLayout() {
   }, [setOnboardingHydrated, setFinanceHydrated]);
 
   useEffect(() => {
-    if (financeHydrated && onboardingHydrated) {
+    if (!CLOSED_TEST_MODE && financeHydrated && onboardingHydrated) {
       void initializeAuth();
     }
   }, [financeHydrated, onboardingHydrated, initializeAuth]);
 
-  const ready = loaded && onboardingHydrated && financeHydrated && authInitialized;
+  const ready =
+    loaded &&
+    onboardingHydrated &&
+    financeHydrated &&
+    (CLOSED_TEST_MODE || authInitialized);
 
   useEffect(() => {
     if (ready) {
