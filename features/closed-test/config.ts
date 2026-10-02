@@ -1,6 +1,11 @@
 export const CLOSED_TEST_MODE =
   process.env.EXPO_PUBLIC_CLOSED_TEST_MODE === 'true';
 
+export const CLOSED_TEST_BACKGROUND = {
+  light: '#FFFFFF',
+  dark: '#090A0A',
+} as const;
+
 export type ClosedTestAccountKey =
   | 'energy'
   | 'water'
