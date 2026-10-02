@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Input } from '@/components/ui';
-import { formatCentsToBRL } from '@/utils/money';
+import { formatCentsToBRL, parseBRLToCents } from '@/utils/money';
 
 type Props = {
   cents: number;
@@ -18,22 +18,33 @@ export function ClosedTestMoneyInput({
   testID,
   accessibilityLabel,
 }: Props) {
-  const value = useMemo(
-    () => (cents > 0 ? formatCentsToBRL(cents).replace('\u00a0', ' ') : ''),
-    [cents],
+  const [raw, setRaw] = useState(
+    cents > 0 ? formatCentsToBRL(cents).replace('\u00a0', ' ') : '',
   );
+
+  useEffect(() => {
+    if (cents === 0 && raw !== '') return;
+    if (cents > 0 && raw === '') {
+      setRaw(formatCentsToBRL(cents).replace('\u00a0', ' '));
+    }
+  }, [cents, raw]);
 
   return (
     <Input
-      value={value}
+      value={raw}
       onChangeText={(text) => {
-        const digits = text.replace(/\D/g, '');
-        const reais = digits ? Number.parseInt(digits, 10) : 0;
-        onChangeCents(Number.isFinite(reais) ? reais * 100 : 0);
+        setRaw(text);
+        const parsed = parseBRLToCents(text);
+        onChangeCents(parsed && parsed > 0 ? parsed : 0);
+      }}
+      onBlur={() => {
+        if (cents > 0) {
+          setRaw(formatCentsToBRL(cents).replace('\u00a0', ' '));
+        }
       }}
       placeholder="R$ 0,00"
-      keyboardType="number-pad"
-      inputMode="numeric"
+      keyboardType="decimal-pad"
+      inputMode="decimal"
       autoFocus={autoFocus}
       testID={testID}
       accessibilityLabel={accessibilityLabel}
