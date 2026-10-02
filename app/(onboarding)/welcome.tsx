@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Spacer, Text } from '@/components/ui';
+import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
 import { OnboardingHeader } from '@/features/onboarding/OnboardingHeader';
 import { STEPS, stepProgress } from '@/features/onboarding/progress';
 import { useTheme } from '@/lib/theme';
@@ -26,6 +27,26 @@ export default function WelcomeScreen() {
       }),
     ]).start();
   }, [fade, rise]);
+
+  if (CLOSED_TEST_MODE) {
+    return (
+      <Screen scroll={false}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text variant="hero" accessibilityRole="header">
+            Equilibrium
+          </Text>
+          <Spacer size="md" />
+          <Text variant="title">Vamos organizar seu dinheiro?</Text>
+        </View>
+
+        <Button
+          label="Começar"
+          onPress={() => router.push('/(onboarding)/income')}
+          testID="onboarding-start"
+        />
+      </Screen>
+    );
+  }
 
   return (
     <Screen scroll={false}>
