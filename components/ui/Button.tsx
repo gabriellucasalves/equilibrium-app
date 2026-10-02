@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, type ViewStyle } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
@@ -23,6 +24,7 @@ export function Button({
   testID,
 }: ButtonProps) {
   const theme = useTheme();
+  const [focused, setFocused] = useState(false);
 
   const backgrounds = {
     primary: theme.colors.accent,
@@ -42,14 +44,17 @@ export function Button({
       accessibilityRole="button"
       disabled={disabled}
       onPress={onPress}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      accessibilityState={{ disabled }}
       style={({ pressed }) => [
         styles.base,
         {
           backgroundColor: backgrounds[variant],
           borderRadius: theme.radii.lg,
           opacity: disabled ? 0.45 : pressed ? 0.88 : 1,
-          borderWidth: variant === 'ghost' ? 1 : 0,
-          borderColor: theme.colors.border,
+          borderWidth: focused || variant === 'ghost' ? 1 : 0,
+          borderColor: focused ? theme.colors.accent : theme.colors.border,
           transform: [{ scale: pressed && !disabled ? 0.98 : 1 }],
         },
         style,
