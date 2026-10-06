@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { AddMenu } from '@/features/app/AddMenu';
+import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
 import { routes } from '@/lib/routes';
 import { useTheme } from '@/lib/theme';
 
@@ -43,6 +44,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="transactions"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Movimentações',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="swap-horizontal-outline" size={size} color={color} />
@@ -52,6 +54,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="assistant"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Controlinho',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="sparkles-outline" size={size} color={color} />
@@ -61,6 +64,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="planning"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Planejamento',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="pie-chart-outline" size={size} color={color} />
@@ -70,6 +74,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="profile"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Perfil',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person-outline" size={size} color={color} />
@@ -78,55 +83,58 @@ export default function TabsLayout() {
         />
       </Tabs>
 
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Adicionar movimentação"
-        onPress={() => setMenuOpen(true)}
-        style={({ pressed }) => ({
-          position: 'absolute',
-          right: theme.spacing.lg,
-          bottom: 78,
-          width: 56,
-          height: 56,
-          borderRadius: 28,
-          backgroundColor: theme.colors.accent,
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: pressed ? 0.9 : 1,
-          transform: [{ scale: pressed ? 0.96 : 1 }],
-          elevation: 4,
-          shadowColor: theme.colors.text,
-          shadowOpacity: 0.18,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 4 },
-        })}
-      >
+      {!CLOSED_TEST_MODE ? (
+        <>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Adicionar movimentação"
+            onPress={() => setMenuOpen(true)}
+            style={({ pressed }) => ({
+              position: 'absolute',
+              right: theme.spacing.lg,
+              bottom: 78,
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: theme.colors.accent,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: pressed ? 0.9 : 1,
+              transform: [{ scale: pressed ? 0.96 : 1 }],
+              elevation: 4,
+              shadowColor: theme.colors.text,
+              shadowOpacity: 0.18,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+            })}
+          >
+            <Ionicons name="add" size={28} color={theme.colors.textInverse} />
+          </Pressable>
 
-        <Ionicons name="add" size={28} color={theme.colors.textInverse} />
-      </Pressable>
-
-      <AddMenu
-        visible={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onExpense={() => {
-          setMenuOpen(false);
-          router.push({
-            pathname: '/(app)/transaction/form',
-            params: { type: 'expense' },
-          });
-        }}
-        onIncome={() => {
-          setMenuOpen(false);
-          router.push({
-            pathname: '/(app)/transaction/form',
-            params: { type: 'income' },
-          });
-        }}
-        onScan={() => {
-          setMenuOpen(false);
-          router.push(routes.receiptCapture);
-        }}
-      />
+          <AddMenu
+            visible={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            onExpense={() => {
+              setMenuOpen(false);
+              router.push({
+                pathname: '/(app)/transaction/form',
+                params: { type: 'expense' },
+              });
+            }}
+            onIncome={() => {
+              setMenuOpen(false);
+              router.push({
+                pathname: '/(app)/transaction/form',
+                params: { type: 'income' },
+              });
+            }}
+            onScan={() => {
+              setMenuOpen(false);
+              router.push(routes.receiptCapture);
+            }}
+          />
+        </>
+      ) : null}
     </View>
   );
 }

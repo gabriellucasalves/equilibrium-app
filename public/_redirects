@@ -1,0 +1,3 @@
+# Cloudflare Pages: SPA fallback so /welcome hits the app router
+# instead of the colliding (auth) static page.
+/*    /index.html   200
