@@ -126,31 +126,14 @@ export function ClosedTestHome() {
         ) : null}
       </View>
 
-      <Spacer size="xl" />
-
-      <View
-        style={{
-          borderLeftWidth: 3,
-          borderLeftColor: theme.colors.accent,
-          paddingLeft: theme.spacing.md,
-        }}
-        accessibilityRole="text"
-        accessibilityLabel={
-          energySpent > 0
-            ? 'Controlinho. A luz já está no seu mês.'
-            : 'Controlinho. Seu mês começa por aqui.'
-        }
-      >
-        <Text variant="label" color="accent">
-          Controlinho
-        </Text>
-        <Spacer size="xs" />
-        <Text variant="body">
-          {energySpent > 0
-            ? 'A luz já está no seu mês.'
-            : 'Seu mês começa por aqui.'}
-        </Text>
-      </View>
+      {energySpent > 0 ? (
+        <>
+          <Spacer size="xl" />
+          <Text variant="body" accessibilityRole="text">
+            A luz já está no seu mês.
+          </Text>
+        </>
+      ) : null}
 
       <Spacer size="xl" />
 

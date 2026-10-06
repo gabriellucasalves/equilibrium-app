@@ -70,7 +70,7 @@ export default function IncomeScreen() {
           autoFocus
           testID="income-input"
           accessibilityLabel="Renda mensal"
-          placeholder="R$ 4.000,00"
+          placeholder=""
           hint="Ex.: R$ 4.000,00"
         />
 

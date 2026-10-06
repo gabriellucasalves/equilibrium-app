@@ -44,6 +44,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="transactions"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Movimentações',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="swap-horizontal-outline" size={size} color={color} />
@@ -53,6 +54,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="assistant"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Controlinho',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="sparkles-outline" size={size} color={color} />
@@ -62,6 +64,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="planning"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Planejamento',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="pie-chart-outline" size={size} color={color} />
@@ -71,6 +74,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="profile"
           options={{
+            href: CLOSED_TEST_MODE ? null : undefined,
             title: 'Perfil',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person-outline" size={size} color={color} />
