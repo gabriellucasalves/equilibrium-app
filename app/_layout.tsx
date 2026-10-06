@@ -11,11 +11,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { CLOSED_TEST_MODE } from '@/features/closed-test/config';
+import { prepareClosedTestState } from '@/features/closed-test/reset';
 import { AppThemeProvider, useTheme } from '@/lib/theme';
 import { useAuthStore } from '@/store/auth-store';
 import { useFinanceStore } from '@/store/finance-store';
@@ -39,6 +40,7 @@ export default function RootLayout() {
   const setFinanceHydrated = useFinanceStore((s) => s.setHydrated);
   const initializeAuth = useAuthStore((s) => s.initialize);
   const authInitialized = useAuthStore((s) => s.initialized);
+  const [closedTestPrepared, setClosedTestPrepared] = useState(!CLOSED_TEST_MODE);
 
   useEffect(() => {
     if (error) throw error;
@@ -65,11 +67,22 @@ export default function RootLayout() {
     }
   }, [financeHydrated, onboardingHydrated, initializeAuth]);
 
+  useEffect(() => {
+    if (!CLOSED_TEST_MODE || !financeHydrated || !onboardingHydrated) return;
+    let active = true;
+    void prepareClosedTestState().finally(() => {
+      if (active) setClosedTestPrepared(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, [financeHydrated, onboardingHydrated]);
+
   const ready =
     loaded &&
     onboardingHydrated &&
     financeHydrated &&
-    (CLOSED_TEST_MODE || authInitialized);
+    (CLOSED_TEST_MODE ? closedTestPrepared : authInitialized);
 
   useEffect(() => {
     if (ready) {
@@ -104,8 +117,8 @@ function RootNavigator() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
         <Stack.Screen name="(onboarding)" />
+        <Stack.Screen name="(auth)" />
         <Stack.Screen name="(app)" />
       </Stack>
     </>
